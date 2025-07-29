@@ -58,7 +58,13 @@ const userFormSchema = new mongoose.Schema({
   aadharNumber: {
     type: String,
     required: [true, 'Aadhar number is required'],
-    match: [/^\d{12}$/, 'Aadhar number must be 12 digits']
+    validate: {
+      validator: function (v) {
+        return /^\d{12}$/.test(v.replace(/\D/g, ''));
+      },
+      message: 'Aadhar number must contain exactly 12 digits'
+    },
+    set: v => v.replace(/\D/g, '')
   },
   aadharFile: {
     type: String,
@@ -81,7 +87,15 @@ const userFormSchema = new mongoose.Schema({
   agreeMarketing: {
     type: Boolean,
     default: false
-  }
+  },
+
+  // ✅ New fields
+  courseName: {
+    type: String,
+    required: [true, 'Course name is required']
+  },
+ 
+
 }, {
   timestamps: true
 });
